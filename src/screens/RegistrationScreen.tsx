@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, Alert, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegistrationScreen({navigation}: any) {
@@ -7,11 +7,29 @@ export default function RegistrationScreen({navigation}: any) {
     const [email, setEmail] = useState("");
     const [useName, setUseName] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [specialization, setSpecialization] = useState("");
     const [city, setCity] = useState("");
     
+    const handleRegister = () => {
+        if(password !== confirmPassword){
+            Alert.alert("Hasła nie są takie same!");
+            return;
+        }
+
+        if(password.length < 6){
+            Alert.alert("Hasło musi mieć co najmniej 6 znaków!");
+            return;
+        }
+
+        Alert.alert("Sukces! Zarejestrowano użytkownika: " + useName);
+    }
+
     return (
     <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined}
+         style={styles.keyboardAvoid}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Zarejestruj się</Text>
         {/* Pole email */}
         <Text style={styles.label}>Podaj email</Text>
@@ -38,6 +56,16 @@ export default function RegistrationScreen({navigation}: any) {
             onChangeText={setPassword}
             secureTextEntry={true}
         />
+        {/*Potwierdzenie hasła */}
+        <Text style={styles.label}>Powtórz hasło</Text>
+        <TextInput
+            style={styles.input}
+            placeholder='Powtórz hasło'
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={true} // Również musi ukrywać znaki
+        />
+        
         <Text style={styles.label}>Podaj specjalizację</Text>
         {/* Pole specjalizacja */}
         <TextInput
@@ -55,7 +83,7 @@ export default function RegistrationScreen({navigation}: any) {
             onChangeText={setCity}
         />
         {/* Przycisk rejestracji */}
-        <Pressable style={styles.primaryButton} onPress={()=> Alert.alert("Zarejestrowano użytkownika: " + useName)}>
+        <Pressable style={styles.primaryButton}  onPress={handleRegister}>
             <Text style={styles.primaryButtonText}>Zarejestruj się</Text>
         </Pressable>
         {/* Przycisk powrotu do logowania */}
@@ -63,6 +91,8 @@ export default function RegistrationScreen({navigation}: any) {
             <Text style={styles.secondaryButtonText}>Masz już konto? Zaloguj się</Text>
         </Pressable>
 
+        </ScrollView>
+        </KeyboardAvoidingView>
     </SafeAreaView>
     
     );
@@ -80,6 +110,13 @@ const styles = StyleSheet.create({
         color: '#1a1a1a', // Ciemny tekst nagłówka
         marginBottom: 30,
         marginTop: 20,
+    },
+    keyboardAvoid: {
+        flex: 1,
+    },
+    scrollContent: {
+        padding: 24,
+        paddingBottom: 40,
     },
     label: {
         fontSize: 14,

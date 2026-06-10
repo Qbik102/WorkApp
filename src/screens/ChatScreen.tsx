@@ -1,5 +1,5 @@
 import React, {useState}from "react";
-import { View, Text, StyleSheet, TextInput, Pressable, FlatList, KeyboardAvoidingView } from "react-native";  
+import { View, Text, StyleSheet, TextInput, Pressable, FlatList, KeyboardAvoidingView, Platform } from "react-native";  
 
 // typ pojedynczej wiadomości
 type Message = {
@@ -66,7 +66,8 @@ export default function ChatScreen() {
                 <Text>Jan Kowalski</Text>
             </View>
 
-            <KeyboardAvoidingView style={styles.keyboardAvoid} >
+            <KeyboardAvoidingView style={styles.keyboardAvoid}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}>
                 {/* Lista wiadomości */}
                 <FlatList
                     style={styles.chatContent}
@@ -81,6 +82,7 @@ export default function ChatScreen() {
                         value={inputText}
                         onChangeText={setInputText}
                         placeholder="Napisz wiadomość..."
+                        multiline={true}
                     />
                     <Pressable style={styles.sendButton} onPress={handleSend}>
                         <Text style={styles.sendButtonText}>Wyślij</Text>

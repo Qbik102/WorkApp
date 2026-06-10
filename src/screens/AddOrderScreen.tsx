@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text,TextInput,Pressable, StyleSheet, KeyboardAvoidingView, ScrollView, Alert, Image } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddOrderScreen() {
     // Tutaj będziemy przechowywać dane z formularza
@@ -8,7 +9,8 @@ export default function AddOrderScreen() {
     const [category, setCategory] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("");
-    const [date, setDate] = useState("");
+    const [date, setDate] = useState<Date | null>(null);
+    const [showPicker, setShowPicker] = useState(false);
     const [description, setDescription] = useState("");
 
     // Stan do przechowywania wybranego zdjęcia
@@ -35,12 +37,21 @@ export default function AddOrderScreen() {
         }
     }
     
+    const onDateChange = (event: any, selectedDate?: Date) => {
+        setShowPicker(false);
+
+        if (selectedDate) {
+            setDate(selectedDate);
+        }
+    }
+
     const handleSubmit = () => {
         if (!title || !category || !location || !price || !date) {
             alert("Proszę wypełnić wszystkie wymagane pola!");
             return;
         }
-        // Tutaj dodamy logikę wysyłania danych do backendu
+        const formattedDate = date.toLocaleDateString('pl-PL');
+        // Tutaj dodamy logikę wysyłania danych do backendu 
         console.log("Zlecenie dodane:", { title, category, location, price, date, description });
     }
 
@@ -85,14 +96,26 @@ export default function AddOrderScreen() {
                     onChangeText={setPrice}
                     keyboardType="numeric"
                 />
-            {/* Termin wykonania */}
                 <Text style={styles.label}>Termin wykonania</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="np. 2023-03-15"
-                    value={date}
-                    onChangeText={setDate}
-                />
+                    <Pressable onPress={() => setShowPicker(true)}>
+                        <View pointerEvents="none">
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Wybierz datę z kalendarza"
+                                value={date ? date.toLocaleDateString('pl-PL') : ""}
+                                editable={false}
+                            />
+                        </View>
+                    </Pressable>
+                    {showPicker && (
+                        <DateTimePicker
+                            value={date || new Date()} 
+                            mode="date"
+                            display="default"
+                            onChange={onDateChange}
+                            minimumDate={new Date()} 
+                        />
+                    )}
             {/* Opis zlecenia */}
                 <Text style={styles.label}>Opis zlecenia (opcjonalnie)</Text>
                 <TextInput

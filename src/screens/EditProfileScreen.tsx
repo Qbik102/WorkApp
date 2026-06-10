@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function EditProfileScreen() {
 
     const navigation = useNavigation<any>();
-
+    
     const [name, setName] = useState("Karol Kowalski");
     const [email, setEmail] = useState("karol.kowalski@przyklad.pl");
     const [specialization, setSpecialization] = useState("Elektryk / Hydraulik");
@@ -29,6 +29,7 @@ export default function EditProfileScreen() {
             <ScrollView>
                 <Text style={styles.label}>Imię i nazwisko</Text>
                 <TextInput 
+                    style={styles.input}
                     value={name}
                     onChangeText={setName}
                     placeholder="Wpisz swoje imię i nazwisko"
@@ -36,6 +37,7 @@ export default function EditProfileScreen() {
 
                 <Text style={styles.label}>Email</Text>
                 <TextInput 
+                    style={styles.input}
                     value={email}
                     onChangeText={setEmail}
                     placeholder="Wpisz swój email"
@@ -44,6 +46,7 @@ export default function EditProfileScreen() {
 
                 <Text style={styles.label}>Specjalizacja</Text>
                 <TextInput 
+                    style={styles.input}
                     value={specialization}
                     onChangeText={setSpecialization}
                     placeholder="Wpisz swoją specjalizację (np. Elektryk, Hydraulik)"
